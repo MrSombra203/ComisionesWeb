@@ -1,0 +1,35 @@
+﻿@model ComisionesWeb.ViewModels.VentaCreateVM
+@{
+    ViewData["Title"] = "Registrar Venta";
+}
+<h2>@ViewData["Title"]</h2>
+<form method="post" class="row gy-3">
+    <div class="col-md-4">
+        <label class="form-label">Vendedor</label>
+        <select asp-for="VendedorId" class="form-select" asp-items="ViewBag.Vendedores">
+            <option value="">-- Seleccione --</option>
+        </select>
+        <span asp-validation-for="VendedorId" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">Fecha de venta</label>
+        <input asp-for="FechaVenta" type="date" class="form-control" />
+        <span asp-validation-for="FechaVenta" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">Monto</label>
+        <input asp-for="MontoVenta" class="form-control" />
+        <span asp-validation-for="MontoVenta" class="text-danger"></span>
+    </div>
+    <div class="col-12">
+        <label class="form-label">Descripción</label>
+        <textarea asp-for="Descripcion" class="form-control" rows="3"></textarea>
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-success">Guardar</button>
+        <a class="btn btn-secondary" asp-controller="Comisiones" asp-action="Index">Volver</a>
+    </div>
+</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

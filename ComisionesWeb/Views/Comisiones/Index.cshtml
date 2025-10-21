@@ -1,0 +1,96 @@
+﻿@model ComisionesWeb.ViewModels.ComisionFiltroVM
+@{
+    ViewData["Title"] = "Comisiones por Rango de Fechas";
+}
+<h2>@ViewData["Title"]</h2>
+<form method="post" class="row gy-2 gx-3 align-items-end mb-4">
+    <div class="col-auto">
+        <label class="form-label">Fecha inicio</label>
+        <input asp-for="FechaInicio" type="date" class="form-control" />
+    </div>
+    <div class="col-auto">
+        <label class="form-label">Fecha fin</label>
+        <input asp-for="FechaFin" type="date" class="form-control" />
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Consultar</button>
+        <a class="btn btn-outline-success" asp-controller="Ventas" asp-action="Create">Registrar venta</a>
+    </div>
+</form>
+@if (TempData["Ok"] != null)
+{
+    <div class="alert alert-success">@TempData["Ok"]</div>
+}
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @foreach (var e in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <div>@e.ErrorMessage</div>
+        }
+    </div>
+}
+@if (Model.Resumen.Any())
+{
+    <h4>Resumen por Vendedor</h4>
+    <table class="table table-bordered table-striped">
+        <thead class="table-light">
+            <tr>
+                <th>Vendedor</th>
+                <th>Cédula</th>
+                <th class="text-end"># Ventas</th>
+                <th class="text-end">Total Vendido</th>
+                <th class="text-end">Total Comisiones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in Model.Resumen)
+            {
+                <tr>
+                    <td>@r.NombreVendedor</td>
+                    <td>@r.Cedula</td>
+                    <td class="text-end">@r.TotalVentas</td>
+                    <td class="text-end">@r.TotalMontoVendido.ToString("C")</td>
+                    <td class="text-end fw-bold">@r.TotalComisiones.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@if (Model.Detalle.Any())
+{
+    <h4 class="mt-4">Detalle de Ventas</h4>
+    <table class="table table-sm table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Fecha</th>
+                <th>Vendedor</th>
+                <th>Cédula</th>
+                <th>Regla</th>
+                <th class="text-end">Monto</th>
+                <th class="text-end">%</th>
+                <th class="text-end">Comisión</th>
+                <th>Descripción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var d in Model.Detalle)
+            {
+                <tr>
+                    <td>@d.FechaVenta.ToString("yyyy-MM-dd")</td>
+                    <td>@d.NombreVendedor</td>
+                    <td>@d.Cedula</td>
+                    <td>@d.NombreRegla</td>
+                    <td class="text-end">@d.MontoVenta.ToString("C")</td>
+                    <td class="text-end">@d.PorcentajeComision.ToString("0.##")%</td>
+                    <td class="text-end">@((d.ComisionCalculada ?? 0m).ToString("C"))</td>
+                    <td>@d.Descripcion</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="text-muted">Selecciona un rango y presiona <strong>Consultar</strong>.</p>
+}
